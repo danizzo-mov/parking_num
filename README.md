@@ -11,4 +11,6 @@ SELECT NEW.current_office_id,
 Надо разобраться, что такое ```NEW```, т.к. в такой вставку нет ```FROM```. Возможно, это поле - это какая-то особенность триггеров, т.к. дальше фигурирует ```OLD```. Затем вставка (или обновление) делается в таблицу ```rpt.tarenextstatcourier```, и вставляется, в том числе, поле ```parking_num```.
 
 В процедуре ```whsync.arrivedtare_spimportfromjson``` значение поля ```parking_num``` не подаётся на вход, а вставляется при помощи
-```COALESCE(ods.route_id, ds.parking_num)``` на строке 94.
+```COALESCE(ods.route_id, ds.parking_num)``` на строке 94, где
+-  таблица ```ods``` - это ```lgx.officedeliverysettings```, причём в этой таблице нет иного значения ```delivery_type```, кроме ```"KBT"```, и всего 148 записей;
+-  таблица ```ds``` - это ```lgx.deliverysetting``` (5.3kk записей).
