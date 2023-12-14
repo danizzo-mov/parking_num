@@ -19,9 +19,9 @@ SET parking_num = 0
 ```
 parking_num = COALESCE(ods.route_id, ds.parking_num, 0),
 ```
-где таблица ```ods``` - это ```lgx.officedeliverysettings```, таблица ```ds``` - это ```lgx.deliverysetting```. При этом происходит иземенение всего 3 полей таблицы ```wh.tare```: ```next_office_id```, ```parking_num``` и ```delivery_type```.
+где таблица ```ods``` - это ```lgx.officedeliverysettings```, таблица ```ds``` - это ```lgx.deliverysetting```. При этом происходит изменение всего 3 полей таблицы ```wh.tare```: ```next_office_id```, ```parking_num``` и ```delivery_type```.
 
-Процедура __whsync.ordershippingsetting_importfromjson__ достаёт из таблицы ```lgx.deliverysetting``` из существующей записи поля ```src_office_id```, ```dst_office_id``` и ```parking_num```, а саму запись удаляет (строки 93-100). Затем в удалённую запись о доставке добавляет данные из входного запроса, в том числе, поле ```parking_num```, и происходит вставка в таблицу ```lgx.deliverysetting``` (строки 103-152). Наконец, на основании вставки в таблицу ```lgx.deliverysetting``` (и из других таблиц) обновляется запись в таблице ```wh.tare``` для заданий, готовых к отгрузке: ... AND t2.ready_to_go IS TRUE ...
+Процедура __whsync.ordershippingsetting_importfromjson__ достаёт из таблицы ```lgx.deliverysetting``` из существующей записи поля ```src_office_id```, ```dst_office_id``` и ```parking_num```, а саму запись удаляет (строки 93-100). Именно эти же поля изменяются предыдущей процедурой. Затем в удалённую запись о доставке добавляет данные из входного запроса, в том числе, поле ```parking_num```, и происходит вставка в таблицу ```lgx.deliverysetting``` (строки 103-152). Наконец, на основании вставки в таблицу ```lgx.deliverysetting``` (и из других таблиц) обновляется запись в таблице ```wh.tare``` для заданий, готовых к отгрузке: ... AND t2.ready_to_go IS TRUE ...
 (строка 194). Поле ```parking_num``` обновляется как и ранее: 
 ```
 parking_num = COALESCE(ods.route_id, ds.parking_num, 0) (строка 159)
